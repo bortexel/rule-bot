@@ -7,6 +7,7 @@
             if ($part->number) {
                 $output[] = "### Раздел $part->number. $part->name.";
             } else $output[] = "### $part->name";
+            if ($part->description) $output[] = $part->description;
             foreach ($part->rules as $rule) $output[] = renderRule($rule);
             $output[] = "  ";
         }
