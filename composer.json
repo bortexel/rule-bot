@@ -1,0 +1,18 @@
+{
+    "name": "ruscalworld/rulebot",
+    "type": "project",
+    "require": {
+        "knplabs/github-api": "3.0",
+        "guzzlehttp/guzzle": "7.0.1",
+        "http-interop/http-factory-guzzle": "1.0",
+        "ext-json": "*",
+        "firebase/php-jwt": "^5.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "RuscalWorld",
+            "email": "me@ruscalworld.ru"
+        }
+    ]
+}
