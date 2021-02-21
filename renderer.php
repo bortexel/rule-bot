@@ -4,7 +4,9 @@
         $output = ["## $content->name"];
 
         foreach ($content->parts as $part) {
-            $output[] = "### $part->number. $part->name";
+            if ($part->number) {
+                $output[] = "### Раздел $part->number. $part->name.";
+            } else $output[] = "### $part->name";
             foreach ($part->rules as $rule) $output[] = renderRule($rule);
             $output[] = "  ";
         }
