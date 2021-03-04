@@ -45,6 +45,8 @@
                 $renders[$filename] = render($file);
             }
 
+            if (count($renders) == 0) return;
+
             try {
                 $branch = 'rule-update/' . date('Ymd-His');
                 $base_branch = $client->repos()->branches(REPOSITORY_USER, REPOSITORY_NAME, RULES_BRANCH);
