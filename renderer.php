@@ -19,5 +19,12 @@
     function renderRule($rule, int $level = 0): string {
         $output = [str_repeat('&nbsp; ', $level) . "**$rule->name.** $rule->text  "];
         if ($rule->rules) foreach ($rule->rules as $subrule) $output[] = renderRule($subrule, $level + 1);
+        if ($rule->punishments) {
+            if (count($rule->punishments) > 1) {
+                $output[] = str_repeat('&nbsp; ', $level + 1) . "**Наказания:**  ";
+                foreach ($rule->punishments as $punishment) $output[] = str_repeat('&nbsp; ', $level + 1) . "• $punishment  ";
+            } else $output[] = str_repeat('&nbsp; ', $level + 1) . "**Наказание:** " . $rule->punishments[0] . "  ";
+        }
+
         return join("\n", $output);
     }
