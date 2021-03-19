@@ -1,5 +1,5 @@
 <?php
-    function render($file): string {
+    function render($file, $punishments = false): string {
         $content = json_decode(base64_decode($file['content']));
         $output = ["## $content->name"];
 
@@ -8,7 +8,7 @@
                 $output[] = "### Раздел $part->number. $part->name.";
             } else $output[] = "### $part->name";
             if ($part->description) $output[] = $part->description . '  ';
-            foreach ($part->rules as $rule) $output[] = renderRule($rule);
+            foreach ($part->rules as $rule) $output[] = renderRule($rule, $punishments);
             $output[] = "  ";
         }
 
@@ -16,10 +16,10 @@
         return join("\n", $output);
     }
 
-    function renderRule($rule, int $level = 0): string {
+    function renderRule($rule, bool $punishments = false, int $level = 0): string {
         $output = [str_repeat('&nbsp; ', $level) . "**$rule->name.** $rule->text  "];
-        if ($rule->rules) foreach ($rule->rules as $subrule) $output[] = renderRule($subrule, $level + 1);
-        if ($rule->punishments) {
+        if ($rule->rules) foreach ($rule->rules as $subrule) $output[] = renderRule($subrule, $punishments, $level + 1);
+        if ($rule->punishments && $punishments) {
             if (count($rule->punishments) > 1) {
                 $output[] = str_repeat('&nbsp; ', $level + 1) . "**Наказания:**  ";
                 foreach ($rule->punishments as $punishment) $output[] = str_repeat('&nbsp; ', $level + 1) . "• $punishment  ";

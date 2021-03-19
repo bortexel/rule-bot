@@ -43,6 +43,7 @@
                 $file = $client->repo()->contents()->show(REPOSITORY_USER, REPOSITORY_NAME, $filename, $payload->ref);
                 $file_cache[$filename] = $file;
                 $renders[$filename] = render($file);
+                $renders[str_replace('.json', '-punishments.json', $filename)] = render($file, true);
             }
 
             if (count($renders) == 0) return;
@@ -57,15 +58,26 @@
 
                 foreach ($renders as $path => $render) {
                     $rule_path = str_replace('rules/', '', str_replace('.json', '', $path)) . '.md';
-                    $old_file = $client->repo()->contents()->show(REPOSITORY_USER, REPOSITORY_NAME, $rule_path, $reference['ref']);
-                    if (!$old_file) continue;
+                    $old_file = null;
+                    try {
+                        $old_file = $client->repo()->contents()->show(REPOSITORY_USER, REPOSITORY_NAME, $rule_path, $reference['ref']);
+                    } catch (Exception $exception) {}
 
-                    $new_file = $client->repo()->contents()->update(REPOSITORY_USER, REPOSITORY_NAME, $rule_path, $render,
-                        'Обновление правил для ' . $path, $old_file['sha'], $branch, [
-                            'name' => 'RulesBot',
-                            'email' => 'admin@bortexel.ru'
-                        ]
-                    );
+                    if ($old_file) {
+                        $new_file = $client->repo()->contents()->update(REPOSITORY_USER, REPOSITORY_NAME, $rule_path, $render,
+                            'Обновление правил для ' . $path, $old_file['sha'], $branch, [
+                                'name' => 'RulesBot',
+                                'email' => 'admin@bortexel.ru'
+                            ]
+                        );
+                    } else {
+                        $new_file = $client->repo()->contents()->create(REPOSITORY_USER, REPOSITORY_NAME, $rule_path, $render,
+                            'Обновление правил для ' . $path, $branch, [
+                                'name' => 'RulesBot',
+                                'email' => 'admin@bortexel.ru'
+                            ]
+                        );
+                    }
                 }
 
                 $client->pullRequest()->create(REPOSITORY_USER, REPOSITORY_NAME, [
