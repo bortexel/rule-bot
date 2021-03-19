@@ -42,8 +42,13 @@
             foreach ($modified_files as $filename) if (strpos($filename, "rules/") !== false) {
                 $file = $client->repo()->contents()->show(REPOSITORY_USER, REPOSITORY_NAME, $filename, $payload->ref);
                 $file_cache[$filename] = $file;
-                $renders[$filename] = render($file);
-                $renders[str_replace('.json', '-punishments.json', $filename)] = render($file, true);
+
+                $normal_render = render($file);
+                $renders[$filename] = $normal_render;
+
+                $punishments_render = render($file, true);
+                if ($punishments_render != $normal_render)
+                    $renders[str_replace('.json', '-punishments.json', $filename)] = render($file, true);
             }
 
             if (count($renders) == 0) return;
