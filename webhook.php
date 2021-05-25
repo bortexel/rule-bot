@@ -85,6 +85,7 @@
                     }
                 }
 
+                if (strpos($payload->ref, 'draft/') !== false) return;
                 $client->pullRequest()->create(REPOSITORY_USER, REPOSITORY_NAME, [
                     'base' => RULES_BRANCH,
                     'head' => $branch,
