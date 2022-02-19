@@ -17,7 +17,8 @@
     }
 
     function renderRule($rule, bool $punishments = false, int $level = 0): string {
-        $output = [str_repeat('&nbsp; ', $level) . "**$rule->name.** $rule->text  "];
+        $name = $rule->name ? "**$rule->name.**" : '•';
+        $output = [str_repeat('&nbsp; ', $level) . "$name $rule->text  "];
         if ($rule->rules) foreach ($rule->rules as $subrule) $output[] = renderRule($subrule, $punishments, $level + 1);
         if ($rule->punishments && $punishments) {
             if (count($rule->punishments) > 1) {
